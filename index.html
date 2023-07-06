@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GPS Coordinates PWA</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <h1>GPS Coordinates</h1>
+
+  <p id="coordinates">Fetching coordinates...</p>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(function(registration) {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(function(error) {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+
+    function showCoordinates(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      document.getElementById('coordinates').textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
+    }
+
+    function showError(error) {
+      document.getElementById('coordinates').textContent = `Error: ${error.message}`;
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showCoordinates, showError);
+    } else {
+      document.getElementById('coordinates').textContent = 'Geolocation is not supported by this browser.';
+    }
+  </script>
+</body>
+</html>
+
